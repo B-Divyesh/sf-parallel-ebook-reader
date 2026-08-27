@@ -1,14 +1,50 @@
 # Parallel Reader
 
-Live: https://parallel-ebook-reader.sociobot.in — built by the Param Factory (`pwa-offline`).
+Parallel Reader is a private, offline-first reading desk for language learners who own two DRM-free editions of the same book. It opens EPUBs entirely in the browser, lets readers align corresponding paragraphs, follows those anchors while scrolling, plays a local audiobook, and exports useful sentence pairs as TSV.
 
-See `.factory/brief.json` for the researched problem this solves and `.factory/design.md` for the visual system.
+Live: <https://parallel-ebook-reader.sociobot.in>
 
-## Develop
+## What v1 includes
 
-```
+- Real EPUB container, package, spine, metadata, and XHTML extraction
+- Independent chapter selection and side-by-side reading
+- Manual, reversible paragraph anchors and linked reading position
+- Local audio playback without upload
+- Private sentence-pair notebook with TSV and full JSON backup/export
+- IndexedDB persistence, installable PWA shell, and tested offline reload
+- Mobile 390 px edition tabs and complete keyboard operation
+- Optional $18 one-time Reader’s desk license for private clipping notes; all reading and export features remain free
+
+Parallel Reader does not include books, remove DRM, translate text, or publish user content. Font obfuscation used by otherwise DRM-free EPUBs is supported; encrypted reading content is rejected.
+
+## Run and verify
+
+Requires Node.js 20 or newer.
+
+```sh
 npm install
 npm run dev
 npm test
-npm run build   # -> dist/
+npm run build
 ```
+
+The exact production command is `npm run build`. Static output lands in `dist/`, with `dist/index.html` at its root. To run the browser suite after installing Playwright Chromium:
+
+```sh
+npx playwright install chromium
+npm run test:e2e
+```
+
+## Privacy and data ownership
+
+Books, anchors, and clippings remain in IndexedDB on the reader’s device. Audio is session-only. The app has no analytics, trackers, remote fonts, or runtime CDN dependencies. Users can export and restore the complete workspace as JSON and export clippings as TSV. See `/privacy/` and `/terms/` in the built site.
+
+## Deploy
+
+Serve `dist/` as a static site with HTTPS and SPA-independent support for `/privacy/` and `/terms/`. No backend or environment variable is required. Purchases and license verification use the Sociobot billing endpoint registered for `parallel-ebook-reader`; no payment provider is embedded.
+
+The researched scope is in `.factory/brief.json`, visual decisions and asset provenance are in `.factory/design.md`, and verification details are in `.factory/handoff.md`.
+
+## License
+
+MIT. See [LICENSE](LICENSE).

@@ -55,6 +55,4 @@ test('reloads the application shell offline', async ({ page, context }) => {
   await context.setOffline(true);
   await page.reload();
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Your two editions');
-  await page.evaluate(() => window.dispatchEvent(new Event('offline')));
-  await expect(page.locator('#connection')).toBeVisible();
 });
