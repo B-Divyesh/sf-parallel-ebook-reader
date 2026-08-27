@@ -1,12 +1,14 @@
-const VERSION = 'parallel-reader-v1';
+const VERSION = 'parallel-reader-v2';
 const SHELL = ['/', '/index.html', '/offline.html', '/manifest.webmanifest', '/assets/icon.svg', '/assets/icon-192.png', '/assets/icon-512.png', '/assets/parallel-desk.webp'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(VERSION).then(async (cache) => {
-    await cache.addAll(SHELL);
-    const html = await (await fetch('/')).text();
+    await cache.addAll(SHELL.map((url) => new Request(url, { cache: 'reload' })));
+    // Never let an HTTP cache entry seed a new offline shell. Asset filenames
+    // are content-hashed, while HTML and the worker deliberately revalidate.
+    const html = await (await fetch('/', { cache: 'reload' })).text();
     const builtAssets = [...html.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g)].map((match) => match[1]);
-    await cache.addAll([...new Set(builtAssets)]);
+    await cache.addAll([...new Set(builtAssets)].map((url) => new Request(url, { cache: 'reload' })));
   }));
 });
 

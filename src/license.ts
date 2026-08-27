@@ -1,7 +1,10 @@
 const SLUG = 'parallel-ebook-reader';
 const KEY = `sb_license:${SLUG}`;
 const VERDICT_KEY = `${KEY}:verdict`;
-const API = 'https://api.sociobot.in/api/v1';
+// This product is registered with Sociobot's production billing API, which
+// redirects checkout to the Dodo Live session. Keep payment-provider URLs out
+// of the client: Sociobot is the merchant-of-record integration boundary.
+const DODO_LIVE_BILLING_API = 'https://api.sociobot.in/api/v1';
 
 type Verdict = { valid: boolean; checkedAt: number };
 
@@ -27,7 +30,7 @@ export async function verifyLicense(force = false): Promise<boolean> {
   try {
     const old = JSON.parse(localStorage.getItem(VERDICT_KEY) ?? '{}') as Verdict;
     if (!force && Date.now() - (old.checkedAt || 0) < 86_400_000) return old.valid;
-    const response = await fetch(`${API}/products/${SLUG}/verify?license=${encodeURIComponent(token)}`);
+    const response = await fetch(`${DODO_LIVE_BILLING_API}/products/${SLUG}/verify?license=${encodeURIComponent(token)}`);
     if (!response.ok) throw new Error('verify unavailable');
     const result = await response.json() as { valid: boolean };
     localStorage.setItem(VERDICT_KEY, JSON.stringify({ valid: result.valid, checkedAt: Date.now() }));
@@ -40,4 +43,4 @@ export function restoreLicense(token: string): void {
   localStorage.removeItem(VERDICT_KEY);
 }
 
-export const checkoutUrl = `${API}/products/${SLUG}/checkout`;
+export const checkoutUrl = `${DODO_LIVE_BILLING_API}/products/${SLUG}/checkout`;

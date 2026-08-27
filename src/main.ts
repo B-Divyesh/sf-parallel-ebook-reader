@@ -280,14 +280,35 @@ function updateConnection(): void { byId('connection').hidden = navigator.onLine
 async function registerServiceWorker(): Promise<void> {
   if (!('serviceWorker' in navigator)) return;
   try {
-    const replacingExistingWorker = Boolean(navigator.serviceWorker.controller);
+    // Capture this before registration: on a first visit `clients.claim()` can set a
+    // controller before the installing worker emits its final state change.
+    // That is an installation, not an available update.
+    const hadController = Boolean(navigator.serviceWorker.controller);
     const registration = await navigator.serviceWorker.register('/sw.js');
+    const toast = byId('update-toast');
+    const updateButton = byId<HTMLButtonElement>('update-button');
+
+    const showWaitingUpdate = (): void => {
+      // A visible action is only truthful when this exact registration has a
+      // worker waiting to be activated. A worker that activated on first install
+      // must never be presented as an update.
+      toast.hidden = !(hadController && registration.waiting);
+    };
+
+    showWaitingUpdate();
     registration.addEventListener('updatefound', () => {
       const worker = registration.installing; if (!worker) return;
-      worker.addEventListener('statechange', () => { if (worker.state === 'installed' && navigator.serviceWorker.controller) byId('update-toast').hidden = false; });
+      worker.addEventListener('statechange', () => {
+        if (worker.state === 'installed') showWaitingUpdate();
+      });
     });
-    byId('update-button').addEventListener('click', () => { registration.waiting?.postMessage({ type: 'SKIP_WAITING' }); });
-    navigator.serviceWorker.addEventListener('controllerchange', () => { if (replacingExistingWorker) location.reload(); });
+    updateButton.addEventListener('click', () => {
+      const waiting = registration.waiting;
+      if (!waiting) { toast.hidden = true; return; }
+      updateButton.disabled = true;
+      waiting.postMessage({ type: 'SKIP_WAITING' });
+    });
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadController) location.reload(); });
   } catch { /* the reader remains functional without installation support */ }
 }
 
