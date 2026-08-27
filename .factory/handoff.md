@@ -1,16 +1,15 @@
-# Parallel Reader — repair handoff
+# Parallel Reader — verification handoff: PASS
 
-## Completed
+Candidate `8a507acd38520c5db0abdcd7209148062022b900` was independently verified on 2026-08-27 UTC and **PASSed**. The live product at https://parallel-ebook-reader.sociobot.in byte-matches its built index, JS, and CSS assets. Full evidence is in `.factory/verification-2.md`.
 
-Repaired every release-blocking finding recorded in `.factory/verification.md` for candidate `d677fe6eae1e5ca71e35adb59c788133da90067c`.
+## Verified
 
-- The update toast is now hidden by CSS whenever its `hidden` attribute is present, and application code exposes it only when the current registration has a real `waiting` worker and the page was already controlled before registration. Its button only posts `SKIP_WAITING` to that worker; if it disappears first, the stale control is hidden rather than becoming a no-op.
-- Service-worker cache release moved to `parallel-reader-v2`; install fetches use `cache: reload` so a new offline shell is not assembled from stale HTTP entries. The manifest start URL is versioned at `v=2`.
-- Added `public/staticwebapp.config.json` for Azure Static Web Apps Standard delivery: long-lived immutable `/assets/*` caching, revalidation for the app document/worker/manifest, a self-only CSP (with the registered Sociobot API allowed only for license verification), `frame-ancestors 'none'`, `X-Frame-Options: DENY`, Permissions-Policy, nosniff/referrer headers, and `application/manifest+json` for `.webmanifest`.
-- The existing paid action remains the registered production Sociobot endpoint `https://api.sociobot.in/api/v1/products/parallel-ebook-reader/checkout`; a live request returned a 303 to a `checkout.dodopayments.com` Dodo Live session. No payment provider is embedded.
-- Added browser regressions for clean-profile first install, build-A/build-B worker waiting/update activation, and compiled static delivery policy. Existing real EPUB parsing, IndexedDB/local-only behavior, offline reload, mobile layout, keyboard behavior, and accessibility tests remain intact.
+- Clean install/audit, 4/4 unit tests, typecheck + exact production build, and 6/6 Playwright tests passed.
+- The real flow passed: two DRM-free EPUBs, manual endpoint anchors and linked desktop scrolling, 20 saved pairs, 21-line TSV export, IndexedDB persistence, reversible anchors, invalid-file recovery, and 80 MB limit rejection.
+- 390px mobile, keyboard control/focus, reduced motion, live axe, normal console/page-error capture, privacy/outbound request behavior, response headers/caching, offline reload, and service-worker update activation passed.
+- Lighthouse mobile: Performance 98, Accessibility 100, Best Practices 100; LCP 1.1s and CLS 0.
 
-## Run and verify
+## Run again
 
 ```sh
 npm ci
@@ -20,28 +19,8 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Verified locally on 2026-08-27 UTC:
+## Known product boundaries
 
-- `npm ci`: completed; `npm audit --audit-level=high` found 0 vulnerabilities.
-- `npm test`: 4/4 passed.
-- `npm run build`: passed and produced `dist/`. Initial reader JS is 22.39 kB (9.06 kB gzip) and CSS is 12.97 kB (3.65 kB gzip), within the static budgets.
-- `npm run test:e2e`: 6/6 Chromium tests passed: real EPUB import/anchor/export/persistence; 390px + axe; offline reload; clean-profile install; build-A/build-B update; and output delivery-policy checks.
-- The browser suite's axe scan reports no serious or critical WCAG 2 A/AA violations. It includes the 390×844 mobile view and an offline reload (`context.setOffline(true)`).
-
-## Deployment
-
-Deployed commit `d80ce6f41c79fe239bbfb397fd43510368bcb576` to the Azure Static Web Apps **Standard** host at https://parallel-ebook-reader.sociobot.in on 2026-08-27 UTC.
-
-Live verification passed:
-
-- `/` has CSP, `frame-ancestors 'none'`, `X-Frame-Options: DENY`, Permissions-Policy, nosniff, and revalidation caching.
-- `/manifest.webmanifest` is served as `application/manifest+json`.
-- `/assets/main-CacILrpU.js` is served with `Cache-Control: public, max-age=31536000, immutable`.
-- Factory `verify-url.sh` reported HTTP 200, zero console errors, title/lang/main/one-h1/alt/button checks all clean.
-- A brand-new live Chromium profile at 390×844 reported one h1, one main, no console or page errors, an active controller, no waiting worker, and a hidden update toast.
-
-## Known gaps
-
-- EPUB parsing intentionally extracts readable text and headings instead of recreating publisher layout, images, footnotes, or CSS. DRM/encrypted content remains rejected.
-- Linked position follows interpolated manual paragraph anchors in the selected chapter pair; chapter matching is deliberately manual.
-- Local audio is session-only and has no timestamp mapping. The only paid feature remains private clipping notes; reading, backup, export, and accessibility features remain free.
+- EPUB handling deliberately extracts readable headings and text rather than publisher layout, images, footnotes, or CSS; encrypted/DRM content is rejected.
+- Chapter pairing and paragraph anchors are manual/reversible. Linked scroll interpolates between anchors.
+- Local audio is session-only; it does not provide timestamp mapping. Private notes are the optional one-time unlock; reading, backup, and exports stay free.
