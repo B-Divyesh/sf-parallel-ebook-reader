@@ -1,5 +1,11 @@
 # Parallel Reader — build handoff
 
+## Independent verification verdict — FAIL (2026-08-27 UTC)
+
+Commit `d677fe6eae1e5ca71e35adb59c788133da90067c` and `https://parallel-ebook-reader.sociobot.in` were independently checked from a clean checkout. The live `index.html` and `sw.js` byte-match the candidate build. Core unit, build, E2E, desktop/mobile, offline, accessibility, keyboard, malformed-EPUB recovery, TSV export, privacy/outbound-request, and bundle checks passed; see `.factory/verification.md` for exact commands and evidence.
+
+Do **not** release this candidate as verified. A brand-new browser profile incorrectly displays the PWA “update available” toast despite having no waiting worker; its Update now action is then a no-op. The deployed site also serves hashed assets with only `max-age=30` and lacks CSP/frame/permissions hardening (and serves the manifest as `application/octet-stream`). These are recorded as P1/P2 defects in `.factory/verification.md`.
+
 ## Shipped
 
 Finished v1 of the local-first Parallel Reader PWA. Users can import two real DRM-free EPUBs, choose chapters independently, read side by side, create and remove paragraph anchors, follow anchored linked position, save sentence pairs, play local audio, export TSV, and export/import a complete JSON workspace backup. Books, anchors, clippings, and notes persist in IndexedDB. No book content is uploaded.
