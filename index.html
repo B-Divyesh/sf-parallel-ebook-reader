@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f2efe6" />
+    <meta name="description" content="Privately align your own DRM-free EPUB editions, read them in parallel, and export sentence pairs." />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/assets/parallel-desk.webp" as="image" type="image/webp" />
+    <title>Parallel Reader — Your editions, read together</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to reader</a>
+    <header class="masthead">
+      <a class="wordmark" href="/" aria-label="Parallel Reader home">
+        <span class="folio">PR—01</span><span>Parallel Reader</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <button class="text-button" id="library-button" type="button">Library</button>
+        <button class="text-button" id="notebook-button" type="button">Notebook <span id="clip-count">0</span></button>
+        <button class="text-button" id="support-button" type="button">Reader’s desk</button>
+      </nav>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <section class="intro" id="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <p class="kicker">A private bilingual reading desk</p>
+          <h1 id="page-title">Your two editions.<br /><em>One reading rhythm.</em></h1>
+          <p class="dek">Open two DRM-free EPUBs, pair the passages that belong together, and keep useful sentence pairs without uploading a single page.</p>
+          <div class="intro-actions">
+            <button class="primary-button" id="start-button" type="button">Open your editions</button>
+            <span class="privacy-note">Works offline · stays on this device</span>
+          </div>
+        </div>
+        <figure class="hero-figure">
+          <img src="/assets/parallel-desk.webp" width="1200" height="800" alt="An illustrated open book with red pencil marks linking passages across its facing pages" fetchpriority="high" />
+          <figcaption><b>Plate 01.</b> Corresponding passages, joined by hand.</figcaption>
+        </figure>
+      </section>
+
+      <section class="workspace" id="workspace" aria-labelledby="workspace-heading">
+        <div class="workspace-heading">
+          <div>
+            <p class="kicker">Reading room</p>
+            <h2 id="workspace-heading">Parallel desk</h2>
+          </div>
+          <div class="desk-actions">
+            <label class="toggle"><input id="link-scroll" type="checkbox" checked /><span>Link position</span></label>
+            <button class="quiet-button" id="anchors-button" type="button">Anchors <span id="anchor-count">0</span></button>
+            <button class="quiet-button" id="desk-library-button" type="button">Editions</button>
+          </div>
+        </div>
+        <div class="mobile-tabs" role="tablist" aria-label="Visible edition">
+          <button role="tab" id="tab-left" aria-controls="left-panel" aria-selected="true" type="button">Edition A</button>
+          <button role="tab" id="tab-right" aria-controls="right-panel" aria-selected="false" type="button">Edition B</button>
+        </div>
+        <div class="reader-grid">
+          <article class="reader-panel" id="left-panel" data-side="left" aria-labelledby="left-book-title">
+            <div class="reader-topline"><span>Edition A</span><span id="left-language">—</span></div>
+            <h3 id="left-book-title">No book open</h3>
+            <p class="book-author" id="left-book-author"></p>
+            <label class="chapter-label" for="left-chapter">Chapter</label>
+            <select id="left-chapter"></select>
+            <div class="pages" id="left-pages" tabindex="0" aria-label="Edition A paragraphs"></div>
+          </article>
+          <div class="alignment-rail" aria-hidden="true"><span>¶</span><i></i><span>¶</span></div>
+          <article class="reader-panel" id="right-panel" data-side="right" aria-labelledby="right-book-title">
+            <div class="reader-topline"><span>Edition B</span><span id="right-language">—</span></div>
+            <h3 id="right-book-title">No book open</h3>
+            <p class="book-author" id="right-book-author"></p>
+            <label class="chapter-label" for="right-chapter">Chapter</label>
+            <select id="right-chapter"></select>
+            <div class="pages" id="right-pages" tabindex="0" aria-label="Edition B paragraphs"></div>
+          </article>
+        </div>
+        <div class="pair-bar" id="pair-bar">
+          <div><span class="pair-step">Current selection</span><strong id="pair-summary">Select one paragraph in each edition</strong></div>
+          <div class="pair-actions">
+            <button class="quiet-button" id="save-pair" type="button" disabled>Save sentence pair</button>
+            <button class="primary-button small" id="add-anchor" type="button" disabled>Add anchor</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="how-it-works" aria-labelledby="method-heading">
+        <p class="kicker">The method</p>
+        <h2 id="method-heading">Align only what matters.</h2>
+        <ol>
+          <li><span>01</span><b>Open</b><p>Choose your legitimately obtained, DRM-free EPUB editions.</p></li>
+          <li><span>02</span><b>Join</b><p>Select matching paragraphs and add reversible anchors.</p></li>
+          <li><span>03</span><b>Keep</b><p>Save useful pairs and export a clean TSV for your study system.</p></li>
+        </ol>
+      </section>
+    </main>
+
+    <dialog id="library-dialog" aria-labelledby="library-title">
+      <form method="dialog" class="dialog-sheet">
+        <div class="dialog-head"><div><p class="kicker">Local library</p><h2 id="library-title">Open your editions</h2></div><button class="icon-button" value="cancel" aria-label="Close library">×</button></div>
+        <p class="dialog-intro">Files are unpacked in your browser and saved locally. Nothing is uploaded. Only DRM-free EPUBs up to 80 MB are accepted.</p>
+        <div class="import-grid">
+          <label class="import-block" for="left-file"><span class="folio">Edition A</span><b id="left-file-label">Choose first EPUB</b><small>Original or stronger language</small><input id="left-file" type="file" accept=".epub,application/epub+zip" /></label>
+          <label class="import-block" for="right-file"><span class="folio">Edition B</span><b id="right-file-label">Choose second EPUB</b><small>Translation or learning language</small><input id="right-file" type="file" accept=".epub,application/epub+zip" /></label>
+        </div>
+        <div class="audio-row"><div><b>Optional audiobook</b><small>Play a local audio file beside your reading. The file is not uploaded or stored.</small></div><label class="quiet-button" for="audio-file">Choose audio<input id="audio-file" type="file" accept="audio/*" /></label></div>
+        <audio id="audio-player" controls hidden></audio>
+        <details class="data-tools"><summary>Your data</summary><div><button id="backup-button" type="button" class="quiet-button">Export backup</button><label class="quiet-button" for="restore-file">Import backup<input id="restore-file" type="file" accept="application/json" /></label><button id="clear-button" type="button" class="danger-button">Clear this desk</button></div></details>
+        <p class="form-status" id="import-status" role="status" aria-live="polite"></p>
+      </form>
+    </dialog>
+
+    <dialog id="notebook-dialog" aria-labelledby="notebook-title">
+      <form method="dialog" class="dialog-sheet wide-dialog">
+        <div class="dialog-head"><div><p class="kicker">Private clippings</p><h2 id="notebook-title">Sentence notebook</h2></div><button class="icon-button" value="cancel" aria-label="Close notebook">×</button></div>
+        <div id="clips-list"></div>
+        <div class="dialog-footer"><p>TSV opens cleanly in spreadsheets and flashcard tools.</p><button id="export-tsv" class="primary-button" type="button">Export TSV</button></div>
+      </form>
+    </dialog>
+
+    <dialog id="anchors-dialog" aria-labelledby="anchors-title">
+      <form method="dialog" class="dialog-sheet">
+        <div class="dialog-head"><div><p class="kicker">Alignment map</p><h2 id="anchors-title">Manual anchors</h2></div><button class="icon-button" value="cancel" aria-label="Close anchors">×</button></div>
+        <p class="dialog-intro">Anchors tell linked scrolling which passages correspond. Remove any anchor without changing your books.</p>
+        <div id="anchors-list"></div>
+      </form>
+    </dialog>
+
+    <dialog id="support-dialog" aria-labelledby="support-title">
+      <form method="dialog" class="dialog-sheet">
+        <div class="dialog-head"><div><p class="kicker">One-time unlock</p><h2 id="support-title">Reader’s desk</h2></div><button class="icon-button" value="cancel" aria-label="Close Reader’s desk">×</button></div>
+        <p class="price"><strong>$18</strong> once</p>
+        <p class="dialog-intro">The complete parallel reader and every export stay free. Reader’s desk adds private notes to saved pairs and supports continued local-first development.</p>
+        <a id="buy-link" class="primary-button centered" href="https://api.sociobot.in/api/v1/products/parallel-ebook-reader/checkout">Buy Reader’s desk</a>
+        <label for="license-input">Have a license? Paste it here</label>
+        <div class="license-row"><input id="license-input" type="text" autocomplete="off" spellcheck="false" /><button id="restore-license" class="quiet-button" type="button">Verify license</button></div>
+        <p id="license-status" class="form-status" role="status" aria-live="polite"></p>
+        <p class="legal-note">Sociobot/Dodo is the merchant of record. Refunds are handled there and revoke the license. See <a href="/privacy/">privacy</a> and <a href="/terms/">terms</a>.</p>
+      </form>
+    </dialog>
+
+    <div class="toast" id="update-toast" hidden><span>An updated edition of the app is ready.</span><button id="update-button" type="button">Update now</button></div>
+    <div class="connection" id="connection" role="status" hidden>Offline — your saved desk still works.</div>
+    <footer><span>Parallel Reader · private by design</span><span>Original AI-assisted illustration · <a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span></footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
