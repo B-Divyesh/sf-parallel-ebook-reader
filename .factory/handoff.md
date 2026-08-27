@@ -30,7 +30,15 @@ Verified locally on 2026-08-27 UTC:
 
 ## Deployment
 
-Deploy the built `dist/` directory with `/opt/fleet/lib/deploy-static.sh parallel-ebook-reader /work/repo/dist`; it provisions/uses the Standard Azure Static Web App and honors `staticwebapp.config.json`. After deployment, check the live page, `/manifest.webmanifest`, `/sw.js`, and a hashed `/assets/*` file for the configured headers and MIME type.
+Deployed commit `d80ce6f41c79fe239bbfb397fd43510368bcb576` to the Azure Static Web Apps **Standard** host at https://parallel-ebook-reader.sociobot.in on 2026-08-27 UTC.
+
+Live verification passed:
+
+- `/` has CSP, `frame-ancestors 'none'`, `X-Frame-Options: DENY`, Permissions-Policy, nosniff, and revalidation caching.
+- `/manifest.webmanifest` is served as `application/manifest+json`.
+- `/assets/main-CacILrpU.js` is served with `Cache-Control: public, max-age=31536000, immutable`.
+- Factory `verify-url.sh` reported HTTP 200, zero console errors, title/lang/main/one-h1/alt/button checks all clean.
+- A brand-new live Chromium profile at 390×844 reported one h1, one main, no console or page errors, an active controller, no waiting worker, and a hidden update toast.
 
 ## Known gaps
 
