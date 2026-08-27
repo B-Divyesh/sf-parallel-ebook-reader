@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Parallel Reader paired pages mark">
+  <rect width="512" height="512" rx="72" fill="#f2efe6"/>
+  <path d="M76 100h150c28 0 30 20 30 20s2-20 30-20h150v292H290c-26 0-34 20-34 20s-8-20-34-20H76z" fill="#fbf9f2" stroke="#171714" stroke-width="18"/>
+  <path d="M256 120v292M112 164h96M112 214h96M112 264h96M304 164h96M304 214h96M304 264h96" stroke="#171714" stroke-width="14"/>
+  <path d="M208 304l96-40M208 344l96-20" stroke="#b43a28" stroke-width="12"/>
+  <circle cx="208" cy="304" r="10" fill="#b43a28"/><circle cx="304" cy="264" r="10" fill="#b43a28"/><circle cx="208" cy="344" r="10" fill="#b43a28"/><circle cx="304" cy="324" r="10" fill="#b43a28"/>
+</svg>

@@ -1,0 +1,9 @@
+{
+  "slug": "parallel-ebook-reader",
+  "title": "Parallel Reader",
+  "artifact_class": "pwa-offline",
+  "user": "An intermediate language learner with legitimately obtained EPUBs in two languages who needs synchronized reading, audio, and private word capture.",
+  "smallest_useful_product": "An offline web reader for two DRM-free EPUBs with chapter alignment, manual paragraph anchors, side-by-side mode, and TSV export of selected sentence pairs.",
+  "constraints": "Accept only DRM-free files; no included copyrighted text; keep books and selections in IndexedDB/local export; make alignment manual and reversible.",
+  "monetization": "one-time"
+}

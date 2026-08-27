@@ -1,0 +1,8 @@
+{
+  "model": "factory-image (Azure OpenAI image generation)",
+  "date": "2026-08-27",
+  "size": "1536x1024",
+  "quality": "high",
+  "prompt": "Overhead editorial still life of an open bilingual book on a quiet desk, two facing pages filled only with abstract illegible narrow text-column textures, a single oxide-red pencil drawing precise linking marks between corresponding paragraphs, loose paper index tabs, black printer ink on warm cream newsprint, high-contrast screenprint and subtle halftone texture, hard directional desk light, flat graphic composition, monochrome cream and charcoal with exactly one oxide-red accent, sophisticated 1960s broadsheet art direction, no legible text, no people, no hands, no anatomy, no logos, no watermark, no branded objects, no glossy 3D, no gradients",
+  "review": "Accepted: open-book anatomy is coherent; red joins read clearly; text remains non-semantic texture; no logos, people, watermark, or unintended symbols observed."
+}
